@@ -92,6 +92,7 @@ export default function SiteHistoryPage() {
   const [sortAsc, setSortAsc] = useState(false);
   const [downloadingCsv, setDownloadingCsv] = useState(false);
   const [selectedRun, setSelectedRun] = useState<RunRow | null>(null);
+  const [runningAudit, setRunningAudit] = useState(false);
 
   const pageSize = 25;
   const [page, setPage] = useState(0);
@@ -100,6 +101,45 @@ export default function SiteHistoryPage() {
   const canNext = runs.length === pageSize;
 
   const title = useMemo(() => site?.name ?? "Untitled", [site]);
+
+  async function handleRunAudit(strategy: "mobile" | "desktop") {
+    if (!site || runningAudit) return;
+
+    setRunningAudit(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        alert("Please log in to run an audit");
+        return;
+      }
+
+      const response = await fetch("/api/runs", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${session.access_token}`
+        },
+        body: JSON.stringify({
+          siteId: site.id,
+          url: site.url,
+          strategy
+        })
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Failed to run audit");
+      }
+
+      alert(`${strategy.charAt(0).toUpperCase() + strategy.slice(1)} audit completed successfully!`);
+      // Reload runs to show the new audit
+      await loadSiteAndRuns(userId);
+    } catch (error: any) {
+      alert(`Audit failed: ${error.message}`);
+    } finally {
+      setRunningAudit(false);
+    }
+  }
 
   const { fromISO, toISO } = useMemo(() => {
     const now = new Date();
@@ -352,8 +392,23 @@ export default function SiteHistoryPage() {
               <CardTitle className="text-indigo-400">Quick Actions</CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col gap-2">
-              <Button variant="outline" className="w-full justify-start" onClick={() => alert("Audit triggered! (This would call the API)")}>
-                Run New Audit
+              <Button
+                variant="outline"
+                className="w-full justify-start gap-2"
+                onClick={() => handleRunAudit("mobile")}
+                disabled={runningAudit}
+              >
+                <Smartphone className="h-4 w-4" />
+                {runningAudit ? "Running..." : "Run Mobile Audit"}
+              </Button>
+              <Button
+                variant="outline"
+                className="w-full justify-start gap-2"
+                onClick={() => handleRunAudit("desktop")}
+                disabled={runningAudit}
+              >
+                <Monitor className="h-4 w-4" />
+                {runningAudit ? "Running..." : "Run Desktop Audit"}
               </Button>
               <Button variant="outline" className="w-full justify-start" onClick={() => alert("Alert configuration coming soon!")}>
                 Configure Alerts

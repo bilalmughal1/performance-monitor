@@ -112,7 +112,8 @@ export default function Home() {
         <div className="mb-4 flex justify-center gap-6">
           <Link href="https://github.com/bilalmughal1" target="_blank" className="hover:text-white transition-colors">GitHub</Link>
           <Link href="https://fahadbilal.com" target="_blank" className="hover:text-white transition-colors">Portfolio</Link>
-          <Link href="https://linkedin.com" target="_blank" className="hover:text-white transition-colors">LinkedIn</Link>
+          <Link href="https://linkedin.com/in/fahadbilalsaleem" target="_blank" className="hover:text-white transition-colors">LinkedIn</Link>
+          <Link href="/about" className="hover:text-white transition-colors">About</Link>
         </div>
         <p>&copy; {new Date().getFullYear()} Fahad Bilal Saleem. All rights reserved.</p>
       </footer>
