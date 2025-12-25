@@ -8,13 +8,15 @@ import {
     Settings,
     CreditCard,
     LogOut,
-    Zap
+    Zap,
+    Plug
 } from "lucide-react";
 import { cn } from "@/lib/utils"; // We might need to create this util if missing
 
 const navItems = [
     { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
     { label: "Sites & Reports", href: "/dashboard", icon: LineChart }, // Duplicate for now or filter
+    { label: "Integrations", href: "/dashboard/integrations", icon: Plug },
     { label: "Subscription", href: "/pricing", icon: CreditCard },
     { label: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
