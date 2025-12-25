@@ -2,9 +2,47 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { supabase } from "@/lib/supabase/client";
 
 export default function PricingPage() {
     const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly");
+    const [loading, setLoading] = useState(false);
+
+
+    const handleSubscription = async () => {
+        try {
+            setLoading(true);
+            const { data: { session } } = await supabase.auth.getSession();
+
+            if (!session) {
+                // Redirect to login if not logged in
+                window.location.href = `/login?next=${window.location.pathname}`;
+                return;
+            }
+
+            const response = await fetch("/api/stripe/checkout", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${session.access_token}`
+                },
+                body: JSON.stringify({
+                    priceId: process.env.NEXT_PUBLIC_STRIPE_PRO_PRICE_ID,
+                    returnUrl: window.location.href,
+                }),
+            });
+
+            if (!response.ok) throw new Error("Network response was not ok");
+
+            const { url } = await response.json();
+            window.location.href = url;
+        } catch (error) {
+            console.error("Subscription error:", error);
+            alert("Something went wrong. Please try again.");
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <div className="min-h-screen bg-black text-white relative overflow-hidden">
@@ -118,9 +156,10 @@ export default function PricingPage() {
 
                         <button
                             className="mt-8 block w-full rounded-lg bg-white py-3 text-center text-sm font-bold text-black hover:bg-zinc-200 transition shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.5)]"
-                            onClick={() => alert("Stripe Integration coming in next step!")}
+                            onClick={handleSubscription}
+                            disabled={loading}
                         >
-                            Upgrade to Pro
+                            {loading ? "Processing..." : "Upgrade to Pro"}
                         </button>
                     </div>
                 </div>
@@ -129,7 +168,7 @@ export default function PricingPage() {
                     <Link href="/" className="text-zinc-500 hover:text-white text-sm transition">Back to Home</Link>
                 </div>
             </div>
-        </div>
+        </div >
     );
 }
 

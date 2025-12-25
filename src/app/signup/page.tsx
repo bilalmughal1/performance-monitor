@@ -12,34 +12,56 @@ import { Zap, Github, ArrowRight } from "lucide-react";
 const signupSchema = z.object({
   email: z.string().email("Enter a valid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
+  fullName: z.string().min(2, "Full Name is required"),
+  companyName: z.string().optional(),
+  mobileNumber: z.string().optional(),
+  bio: z.string().optional(),
 });
 
 export default function SignupPage() {
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    fullName: "",
+    companyName: "",
+    mobileNumber: "",
+    bio: ""
+  });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
   const handleSignup = async () => {
     setError("");
 
-    const result = signupSchema.safeParse({ email, password });
+    const result = signupSchema.safeParse(formData);
     if (!result.success) {
       const formatted = result.error.format();
-      // @ts-ignore
-      const emailError = formatted.email?._errors?.[0];
-      // @ts-ignore
-      const passwordError = formatted.password?._errors?.[0];
-      setError(emailError || passwordError || "Invalid input");
+      const firstError = formatted.email?._errors?.[0] ||
+        formatted.password?._errors?.[0] ||
+        formatted.fullName?._errors?.[0] ||
+        "Invalid input";
+      setError(firstError);
       return;
     }
 
     setLoading(true);
     const { error } = await supabase.auth.signUp({
-      email,
-      password,
+      email: formData.email,
+      password: formData.password,
+      options: {
+        data: {
+          full_name: formData.fullName,
+          company_name: formData.companyName,
+          mobile_number: formData.mobileNumber,
+          bio: formData.bio
+        }
+      }
     });
     setLoading(false);
 
@@ -58,7 +80,7 @@ export default function SignupPage() {
       <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-indigo-500/10 blur-[128px]" />
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-purple-500/10 blur-[128px]" />
 
-      <div className="w-full max-w-md space-y-8 relative z-10">
+      <div className="w-full max-w-lg space-y-8 relative z-10">
         <div className="text-center space-y-2">
           <Link href="/" className="inline-flex items-center gap-2 text-white font-bold text-xl">
             <Zap className="h-6 w-6 text-indigo-500" fill="currentColor" />
@@ -71,7 +93,7 @@ export default function SignupPage() {
         <Card className="border-zinc-800 bg-zinc-950/50 backdrop-blur-xl">
           <CardHeader>
             <CardTitle>Sign Up</CardTitle>
-            <CardDescription>Enter your email below to create your account</CardDescription>
+            <CardDescription>Enter your details below to create your account</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             {error && (
@@ -80,18 +102,54 @@ export default function SignupPage() {
               </div>
             )}
 
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-zinc-300">Full Name *</label>
+                <input
+                  name="fullName"
+                  className="flex h-10 w-full rounded-md border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all text-white"
+                  placeholder="John Doe"
+                  value={formData.fullName}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-zinc-300">Company Name</label>
+                <input
+                  name="companyName"
+                  className="flex h-10 w-full rounded-md border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all text-white"
+                  placeholder="Acme Inc."
+                  value={formData.companyName}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+
             <div className="space-y-2">
-              <label className="text-sm font-medium text-zinc-300">Email</label>
+              <label className="text-sm font-medium text-zinc-300">Mobile Number</label>
               <input
+                name="mobileNumber"
                 className="flex h-10 w-full rounded-md border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all text-white"
-                placeholder="m@example.com"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
+                placeholder="+1 (555) 000-0000"
+                value={formData.mobileNumber}
+                onChange={handleChange}
               />
             </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-zinc-300">Email *</label>
+              <input
+                name="email"
+                className="flex h-10 w-full rounded-md border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all text-white"
+                placeholder="m@example.com"
+                value={formData.email}
+                onChange={handleChange}
+              />
+            </div>
+
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <label className="text-sm font-medium text-zinc-300">Password</label>
+                <label className="text-sm font-medium text-zinc-300">Password *</label>
                 <button
                   type="button"
                   className="text-xs text-indigo-400 hover:text-indigo-300"
@@ -101,12 +159,25 @@ export default function SignupPage() {
                 </button>
               </div>
               <input
+                name="password"
                 className="flex h-10 w-full rounded-md border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all text-white"
                 type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={e => setPassword(e.target.value)}
+                value={formData.password}
+                onChange={handleChange}
               />
               <p className="text-xs text-zinc-500">Min 6 characters</p>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-zinc-300">Bio</label>
+              <textarea
+                name="bio"
+                className="flex min-h-[80px] w-full rounded-md border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all text-white resize-none"
+                placeholder="Tell us about yourself..."
+                value={formData.bio}
+                // @ts-ignore
+                onChange={handleChange}
+              />
             </div>
 
             <Button className="w-full" variant="premium" onClick={handleSignup} disabled={loading}>

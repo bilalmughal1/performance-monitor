@@ -330,15 +330,15 @@ export default function SiteHistoryPage() {
                   </div>
                   <div className="flex items-center justify-between border-t border-zinc-800 pt-3">
                     <span className="text-sm text-zinc-400">LCP</span>
-                    <span className="font-mono">{runs[0].lcp}ms</span>
+                    <span className="font-mono">{fmtNum(runs[0].lcp)}ms</span>
                   </div>
                   <div className="flex items-center justify-between border-t border-zinc-800 pt-3">
                     <span className="text-sm text-zinc-400">CLS</span>
-                    <span className="font-mono">{runs[0].cls}</span>
+                    <span className="font-mono">{fmtNum(runs[0].cls, 3)}</span>
                   </div>
                   <div className="flex items-center justify-between border-t border-zinc-800 pt-3">
                     <span className="text-sm text-zinc-400">INP</span>
-                    <span className="font-mono">{getInpDisplay(runs[0]).v ?? "NA"}ms</span>
+                    <span className="font-mono">{fmtNum(getInpDisplay(runs[0]).v)}ms</span>
                   </div>
                 </>
               ) : (
@@ -352,10 +352,10 @@ export default function SiteHistoryPage() {
               <CardTitle className="text-indigo-400">Quick Actions</CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col gap-2">
-              <Button variant="outline" className="w-full justify-start">
+              <Button variant="outline" className="w-full justify-start" onClick={() => alert("Audit triggered! (This would call the API)")}>
                 Run New Audit
               </Button>
-              <Button variant="outline" className="w-full justify-start">
+              <Button variant="outline" className="w-full justify-start" onClick={() => alert("Alert configuration coming soon!")}>
                 Configure Alerts
               </Button>
             </CardContent>

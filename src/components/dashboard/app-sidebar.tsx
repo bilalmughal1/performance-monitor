@@ -16,7 +16,7 @@ const navItems = [
     { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
     { label: "Sites & Reports", href: "/dashboard", icon: LineChart }, // Duplicate for now or filter
     { label: "Subscription", href: "/pricing", icon: CreditCard },
-    { label: "Settings", href: "/settings", icon: Settings },
+    { label: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
 
 export function AppSidebar() {
