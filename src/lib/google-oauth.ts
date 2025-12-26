@@ -25,7 +25,11 @@ export const SCOPES = {
     ads: ['https://www.googleapis.com/auth/adwords']
 };
 
-export function getAuthUrl(service: 'analytics' | 'searchConsole' | 'ads', userId: string) {
+export function getAuthUrl(
+    service: 'analytics' | 'searchConsole' | 'ads',
+    siteId: string,
+    userId: string
+) {
     const scopes = SCOPES[service];
 
     if (!clientId) {
@@ -35,7 +39,7 @@ export function getAuthUrl(service: 'analytics' | 'searchConsole' | 'ads', userI
     return oauth2Client.generateAuthUrl({
         access_type: 'offline',
         scope: scopes,
-        state: JSON.stringify({ userId, service }),
+        state: JSON.stringify({ siteId, userId, service }),
         prompt: 'consent' // Force to get refresh token
     });
 }
