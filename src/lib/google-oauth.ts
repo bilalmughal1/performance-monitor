@@ -1,9 +1,22 @@
 import { google } from 'googleapis';
 
+// Validate environment variables
+const clientId = process.env.GOOGLE_CLIENT_ID;
+const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+
+if (!clientId || !clientSecret || !baseUrl) {
+    console.error('Missing Google OAuth credentials:', {
+        hasClientId: !!clientId,
+        hasClientSecret: !!clientSecret,
+        hasBaseUrl: !!baseUrl
+    });
+}
+
 export const oauth2Client = new google.auth.OAuth2(
-    process.env.GOOGLE_CLIENT_ID,
-    process.env.GOOGLE_CLIENT_SECRET,
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/auth/google/callback`
+    clientId,
+    clientSecret,
+    `${baseUrl}/api/auth/google/callback`
 );
 
 export const SCOPES = {
@@ -14,6 +27,10 @@ export const SCOPES = {
 
 export function getAuthUrl(service: 'analytics' | 'searchConsole' | 'ads', userId: string) {
     const scopes = SCOPES[service];
+
+    if (!clientId) {
+        throw new Error('GOOGLE_CLIENT_ID not configured');
+    }
 
     return oauth2Client.generateAuthUrl({
         access_type: 'offline',
