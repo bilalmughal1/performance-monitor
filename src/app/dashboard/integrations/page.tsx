@@ -107,15 +107,15 @@ export default function IntegrationsPage() {
     }
 
     return (
-        <div className="p-8 max-w-6xl mx-auto space-y-8">
+        <div className="p-4 md:p-8 max-w-6xl mx-auto space-y-6 md:space-y-8">
             <div>
-                <h1 className="text-3xl font-bold tracking-tight text-white">Integrations</h1>
-                <p className="text-zinc-400 mt-2">
+                <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-white">Integrations</h1>
+                <p className="text-zinc-400 mt-2 text-sm md:text-base">
                     Connect your Google services to unlock powerful insights and correlate performance with business metrics.
                 </p>
             </div>
 
-            <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-1">
+            <div className="grid gap-4 md:gap-6 grid-cols-1">
                 {services.map((service) => {
                     const connected = isConnected(service.id);
                     const Icon = service.icon;
@@ -127,17 +127,17 @@ export default function IntegrationsPage() {
                             className={`bg-gradient-to-br ${service.bgColor} border ${service.borderColor}`}
                         >
                             <CardHeader>
-                                <div className="flex items-start justify-between">
-                                    <div className="flex items-center gap-3">
-                                        <Icon className={`h-8 w-8 ${service.color}`} />
-                                        <div>
-                                            <CardTitle className="flex items-center gap-2">
+                                <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
+                                    <div className="flex items-center gap-3 flex-1">
+                                        <Icon className={`h-6 w-6 sm:h-8 sm:w-8 ${service.color} flex-shrink-0`} />
+                                        <div className="min-w-0">
+                                            <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
                                                 {service.name}
                                                 {connected && (
-                                                    <CheckCircle2 className="h-5 w-5 text-emerald-400" />
+                                                    <CheckCircle2 className="h-5 w-5 text-emerald-400 flex-shrink-0" />
                                                 )}
                                             </CardTitle>
-                                            <CardDescription className="mt-1">
+                                            <CardDescription className="mt-1 text-sm">
                                                 {service.description}
                                             </CardDescription>
                                         </div>
@@ -148,7 +148,7 @@ export default function IntegrationsPage() {
                                             variant="outline"
                                             size="sm"
                                             onClick={() => handleDisconnect(service.id)}
-                                            className="border-red-500/20 text-red-400 hover:bg-red-500/10"
+                                            className="border-red-500/20 text-red-400 hover:bg-red-500/10 w-full sm:w-auto"
                                         >
                                             <XCircle className="h-4 w-4 mr-2" />
                                             Disconnect
@@ -159,7 +159,7 @@ export default function IntegrationsPage() {
                                             size="sm"
                                             onClick={() => handleConnect(service.id as any)}
                                             disabled={isLoading}
-                                            className={`border-${service.color.split('-')[1]}-500/20`}
+                                            className={`border-${service.color.split('-')[1]}-500/20 w-full sm:w-auto`}
                                         >
                                             {isLoading ? (
                                                 <>
@@ -188,7 +188,7 @@ export default function IntegrationsPage() {
 
             <Card className="bg-zinc-900/40 border-zinc-800/60">
                 <CardHeader>
-                    <CardTitle>How It Works</CardTitle>
+                    <CardTitle className="text-lg md:text-xl">How It Works</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3 text-sm text-zinc-300">
                     <p>1. Click "Connect" on any service above</p>

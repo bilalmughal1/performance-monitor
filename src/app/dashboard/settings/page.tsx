@@ -74,22 +74,22 @@ export default function SettingsPage() {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    if (loading) return <div className="p-8 text-white">Loading settings...</div>;
+    if (loading) return <div className="p-4 md:p-8 text-white">Loading settings...</div>;
 
     return (
-        <div className="p-8 max-w-4xl mx-auto space-y-8">
+        <div className="p-4 md:p-8 max-w-4xl mx-auto space-y-6 md:space-y-8">
             <div>
-                <h1 className="text-3xl font-bold tracking-tight text-white">Settings</h1>
-                <p className="text-zinc-400">Manage your account settings and profile information.</p>
+                <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-white">Settings</h1>
+                <p className="text-zinc-400 text-sm md:text-base">Manage your account settings and profile information.</p>
             </div>
 
             <Card className="border-zinc-800 bg-zinc-900/50">
                 <CardHeader>
-                    <CardTitle>Profile Information</CardTitle>
-                    <CardDescription>Update your personal details here.</CardDescription>
+                    <CardTitle className="text-lg md:text-xl">Profile Information</CardTitle>
+                    <CardDescription className="text-sm">Update your personal details here.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                    <div className="grid gap-4 md:grid-cols-2">
+                    <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
                         <div className="space-y-2">
                             <label className="text-sm font-medium text-zinc-300">Full Name</label>
                             <input
@@ -142,7 +142,7 @@ export default function SettingsPage() {
                     </div>
 
                     <div className="pt-4 flex justify-end">
-                        <Button onClick={handleUpdate} disabled={updating} variant="premium">
+                        <Button onClick={handleUpdate} disabled={updating} variant="premium" className="w-full md:w-auto">
                             {updating ? "Saving..." : "Save Changes"}
                         </Button>
                     </div>

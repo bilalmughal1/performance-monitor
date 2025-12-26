@@ -167,16 +167,16 @@ export default function DashboardPage() {
   }, [sites, runsBySite]);
 
   return (
-    <div className="p-8 space-y-8 max-w-7xl mx-auto">
+    <div className="p-4 md:p-8 space-y-6 md:space-y-8 max-w-7xl mx-auto">
       {/* Header */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-white">Overview</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-white">Overview</h1>
+          <p className="text-muted-foreground text-sm md:text-base">
             Welcome back, {email.split("@")[0]}
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
           <Button variant="outline" size="sm">
             <LayoutGrid className="mr-2 h-4 w-4" /> View Grid
           </Button>
@@ -187,7 +187,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Projects</CardTitle>
@@ -222,8 +222,8 @@ export default function DashboardPage() {
 
       {/* Quick Add */}
       <Card className="border-dashed border-zinc-800 bg-transparent">
-        <CardContent className="flex items-center gap-4 py-4">
-          <div className="flex-1 flex gap-4">
+        <CardContent className="flex flex-col md:flex-row items-stretch md:items-center gap-4 py-4">
+          <div className="flex-1 flex flex-col sm:flex-row gap-4">
             <input
               id="add-site-input"
               className="flex-1 bg-transparent border-b border-zinc-800 focus:border-white outline-none py-2 text-sm text-white placeholder:text-zinc-600 transition-colors"
@@ -232,13 +232,13 @@ export default function DashboardPage() {
               onChange={e => setNewUrl(e.target.value)}
             />
             <input
-              className="w-48 bg-transparent border-b border-zinc-800 focus:border-white outline-none py-2 text-sm text-white placeholder:text-zinc-600 transition-colors"
+              className="w-full sm:w-48 bg-transparent border-b border-zinc-800 focus:border-white outline-none py-2 text-sm text-white placeholder:text-zinc-600 transition-colors"
               placeholder="Project Name (Optional)"
               value={newName}
               onChange={e => setNewName(e.target.value)}
             />
           </div>
-          <Button disabled={!newUrl || isAdding} onClick={handleAddSite} variant="secondary">
+          <Button disabled={!newUrl || isAdding} onClick={handleAddSite} variant="secondary" className="w-full md:w-auto">
             {isAdding ? "Adding..." : "Track Site"}
           </Button>
         </CardContent>
@@ -246,7 +246,7 @@ export default function DashboardPage() {
       </Card>
 
       {/* Projects Grid */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 md:gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         {loading && <div className="col-span-full text-center py-20 text-zinc-500">Loading your empire...</div>}
 
         {!loading && sites.length === 0 && (
@@ -265,10 +265,10 @@ export default function DashboardPage() {
             <Link href={`/dashboard/sites/${site.id}`} key={site.id} className="block group">
               <Card className="h-full transition-all duration-300 hover:border-zinc-700 hover:bg-zinc-900/80">
                 <CardHeader className="pb-3">
-                  <div className="flex items-start justify-between">
-                    <div className="space-y-1">
-                      <CardTitle className="text-base">{site.name || new URL(site.url).hostname}</CardTitle>
-                      <CardDescription className="font-mono text-xs truncate max-w-[200px]">{site.url}</CardDescription>
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="space-y-1 min-w-0 flex-1">
+                      <CardTitle className="text-base truncate">{site.name || new URL(site.url).hostname}</CardTitle>
+                      <CardDescription className="font-mono text-xs truncate">{site.url}</CardDescription>
                     </div>
                     <HealthBadge score={health} />
                   </div>
@@ -290,8 +290,8 @@ export default function DashboardPage() {
                   </div>
 
                   <div className="mt-4 flex items-center justify-between text-xs text-muted-foreground">
-                    <span>{latest ? `Last run: ${new Date(latest.created_at).toLocaleDateString()}` : "No runs yet"}</span>
-                    <span className="group-hover:text-white transition-colors">View Details →</span>
+                    <span className="truncate">{latest ? `Last run: ${new Date(latest.created_at).toLocaleDateString()}` : "No runs yet"}</span>
+                    <span className="group-hover:text-white transition-colors whitespace-nowrap ml-2">View Details →</span>
                   </div>
                 </CardContent>
               </Card>
