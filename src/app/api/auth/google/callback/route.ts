@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { oauth2Client } from "@/lib/google-oauth";
 import { createClient } from "@supabase/supabase-js";
+import crypto from "crypto";
 
 // Build-safe Supabase initialization
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -26,7 +27,28 @@ export async function GET(req: Request) {
             throw new Error("Supabase not configured");
         }
 
-        const { siteId, userId, service } = JSON.parse(state);
+        let parsed: { siteId: string; userId: string; service: 'analytics' | 'searchConsole' | 'ads' };
+
+        if (process.env.GOOGLE_STATE_SECRET) {
+            try {
+                const decoded = JSON.parse(Buffer.from(state, "base64url").toString("utf8"));
+                const { payload, sig } = decoded as { payload: string; sig: string };
+                const expected = crypto
+                    .createHmac("sha256", process.env.GOOGLE_STATE_SECRET)
+                    .update(payload)
+                    .digest("hex");
+                if (expected !== sig) {
+                    throw new Error("Invalid state signature");
+                }
+                parsed = JSON.parse(payload);
+            } catch {
+                throw new Error("Invalid state");
+            }
+        } else {
+            parsed = JSON.parse(state);
+        }
+
+        const { siteId, userId, service } = parsed;
 
         // Exchange code for tokens
         const { tokens } = await oauth2Client.getToken(code);

@@ -1,9 +1,11 @@
 import { google } from 'googleapis';
+import crypto from 'crypto';
 
 // Validate environment variables
 const clientId = process.env.GOOGLE_CLIENT_ID;
 const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+const stateSecret = process.env.GOOGLE_STATE_SECRET;
 
 if (!clientId || !clientSecret || !baseUrl) {
     console.error('Missing Google OAuth credentials:', {
@@ -36,10 +38,18 @@ export function getAuthUrl(
         throw new Error('GOOGLE_CLIENT_ID not configured');
     }
 
+    const payload = JSON.stringify({ siteId, userId, service });
+
+    let state = payload;
+    if (stateSecret) {
+        const sig = crypto.createHmac('sha256', stateSecret).update(payload).digest('hex');
+        state = Buffer.from(JSON.stringify({ payload, sig })).toString('base64url');
+    }
+
     return oauth2Client.generateAuthUrl({
         access_type: 'offline',
         scope: scopes,
-        state: JSON.stringify({ siteId, userId, service }),
+        state,
         prompt: 'consent' // Force to get refresh token
     });
 }
