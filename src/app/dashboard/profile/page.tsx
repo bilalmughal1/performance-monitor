@@ -40,6 +40,23 @@ export default function ProfilePage() {
           bio: data.bio || "",
           email: data.email || userDa.user.email || ""
         });
+      } else {
+        // If no profile row exists yet, create one with defaults
+        await supabase.from("profiles").upsert({
+          id: userDa.user.id,
+          email: userDa.user.email,
+          full_name: "",
+          company_name: "",
+          mobile_number: "",
+          bio: ""
+        });
+        setFormData({
+          full_name: "",
+          company_name: "",
+          mobile_number: "",
+          bio: "",
+          email: userDa.user.email || ""
+        });
       }
       setLoading(false);
     };

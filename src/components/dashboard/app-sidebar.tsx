@@ -23,7 +23,7 @@ const navItems = [
     { label: "Profile", href: "/dashboard/profile", icon: Settings },
     { label: "Integrations", href: "/dashboard/integrations", icon: Plug },
     { label: "Subscription", href: "/pricing", icon: CreditCard },
-    { label: "Settings", href: "/dashboard/settings", icon: Settings },
+    { label: "App Settings", href: "/dashboard/settings", icon: Settings },
 ];
 
 export function AppSidebar() {

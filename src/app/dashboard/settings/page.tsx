@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
@@ -9,11 +9,26 @@ const themes = ["system", "dark", "light"] as const;
 export default function AppSettingsPage() {
   const [theme, setTheme] = useState<"system" | "dark" | "light">("system");
 
-  const applyTheme = (value: typeof theme) => {
+  // Load saved theme on mount
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const stored = localStorage.getItem("theme") as "system" | "dark" | "light" | null;
+    if (stored) {
+      applyTheme(stored, false);
+      setTheme(stored);
+    } else {
+      applyTheme("system", false);
+    }
+  }, []);
+
+  const applyTheme = (value: typeof theme, persist = true) => {
     setTheme(value);
     if (typeof window !== "undefined") {
-      if (value === "light") document.documentElement.classList.remove("dark");
-      else document.documentElement.classList.add("dark");
+      const root = document.documentElement;
+      root.classList.remove("theme-light", "theme-dark");
+      if (value === "light") root.classList.add("theme-light");
+      if (value === "dark") root.classList.add("theme-dark");
+      if (persist) localStorage.setItem("theme", value);
     }
   };
 
