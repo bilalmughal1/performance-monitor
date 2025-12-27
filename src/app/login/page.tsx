@@ -153,11 +153,18 @@ export default function LoginPage() {
               </CardContent>
             </Card>
 
-            <div className="text-center text-sm text-zinc-400">
-              Don&apos;t have an account?{" "}
-              <Link href="/signup" className="font-medium text-indigo-400 hover:text-indigo-300">
-                Sign up
-              </Link>
+            <div className="text-center text-sm text-zinc-400 space-y-2">
+              <div>
+                Don&apos;t have an account?{" "}
+                <Link href="/signup" className="font-medium text-indigo-400 hover:text-indigo-300">
+                  Sign up
+                </Link>
+              </div>
+              <div>
+                <Link href="/forgot-password" className="text-indigo-400 hover:text-indigo-300">
+                  Forgot password?
+                </Link>
+              </div>
             </div>
 
             <p className="text-center text-xs text-zinc-500">

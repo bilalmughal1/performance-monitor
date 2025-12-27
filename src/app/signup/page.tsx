@@ -66,7 +66,11 @@ export default function SignupPage() {
     setLoading(false);
 
     if (error) {
-      setError(error.message);
+      if (error.message.toLowerCase().includes("already registered")) {
+        setError("An account with this email already exists. Please log in or reset your password.");
+      } else {
+        setError(error.message);
+      }
       return;
     }
 
