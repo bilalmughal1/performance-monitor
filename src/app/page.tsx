@@ -110,12 +110,11 @@ export default function Home() {
 
       <footer className="border-t border-zinc-900 bg-black/80 py-8 md:py-12 text-center text-xs md:text-sm text-zinc-500 backdrop-blur-md">
         <div className="mb-4 flex flex-wrap justify-center gap-4 md:gap-6 px-4">
-          <Link href="https://github.com/bilalmughal1" target="_blank" className="hover:text-white transition-colors">GitHub</Link>
-          <Link href="https://fahadbilal.com" target="_blank" className="hover:text-white transition-colors">Portfolio</Link>
-          <Link href="https://linkedin.com/in/fahadbilalsaleem" target="_blank" className="hover:text-white transition-colors">LinkedIn</Link>
+          <Link href="/contact" className="hover:text-white transition-colors">Contact</Link>
           <Link href="/about" className="hover:text-white transition-colors">About</Link>
+          <Link href="https://github.com/bilalmughal1/performance-monitor" target="_blank" className="hover:text-white transition-colors">GitHub</Link>
         </div>
-        <p>&copy; {new Date().getFullYear()} Fahad Bilal Saleem. All rights reserved.</p>
+        <p>&copy; {new Date().getFullYear()} Performance Monitor. All rights reserved.</p>
       </footer>
     </div>
   );
