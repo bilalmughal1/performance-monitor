@@ -268,7 +268,7 @@ export default function SiteHistoryPage() {
   }
 
   return (
-    <div className="p-8 space-y-8 max-w-7xl mx-auto">
+    <div className="px-4 md:px-6 lg:px-8 py-6 space-y-8 max-w-7xl mx-auto">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="space-y-1">
           <Button variant="ghost" className="pl-0 gap-2 text-zinc-400 hover:text-white" onClick={() => router.push("/dashboard")}>
@@ -278,7 +278,7 @@ export default function SiteHistoryPage() {
           <p className="text-muted-foreground font-mono text-sm">{site?.url}</p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 flex-wrap">
           <div className="flex bg-zinc-900 rounded-md p-1 border border-zinc-800">
             <button
               onClick={() => setStrategy("all")}
@@ -325,8 +325,10 @@ export default function SiteHistoryPage() {
             </div>
           </CardHeader>
           <CardContent className="h-[300px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={chartData}>
+            <div className="w-full overflow-x-auto">
+              <div className="min-w-[320px] h-[260px] sm:h-[300px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={chartData}>
                 <defs>
                   <linearGradient id="colorMetric" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3} />
@@ -349,7 +351,9 @@ export default function SiteHistoryPage() {
                   <Area type="monotone" dataKey={metric} stroke="#6366f1" fillOpacity={1} fill="url(#colorMetric)" strokeWidth={2} />
                 )}
               </AreaChart>
-            </ResponsiveContainer>
+                </ResponsiveContainer>
+              </div>
+            </div>
           </CardContent>
         </Card>
 
@@ -428,7 +432,7 @@ export default function SiteHistoryPage() {
           <CardTitle>Run History</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="rounded-md border border-zinc-800 overflow-hidden">
+          <div className="rounded-md border border-zinc-800 overflow-hidden overflow-x-auto">
             <table className="w-full text-sm">
               <thead className="bg-zinc-900/50">
                 <tr className="border-b border-zinc-800">
