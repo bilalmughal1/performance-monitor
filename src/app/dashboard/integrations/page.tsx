@@ -14,15 +14,19 @@ type Integration = {
 };
 
 export default function IntegrationsPage() {
-    const [integrations, setIntegrations] = useState<Integration[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [connecting, setConnecting] = useState<string | null>(null);
+  const [integrations, setIntegrations] = useState<Integration[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [connecting, setConnecting] = useState<string | null>(null);
+  const [sites, setSites] = useState<{ id: string; name: string | null; url: string }[]>([]);
+  const [selectedSiteId, setSelectedSiteId] = useState<string>("");
+  const [error, setError] = useState<string>("");
 
-    useEffect(() => {
-        loadIntegrations();
-    }, []);
+  useEffect(() => {
+    loadIntegrations();
+    loadSites();
+  }, []);
 
-    async function loadIntegrations() {
+  async function loadIntegrations() {
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) return;
 
@@ -35,8 +39,20 @@ export default function IntegrationsPage() {
         setLoading(false);
     }
 
+  async function loadSites() {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+    const { data } = await supabase
+      .from("sites")
+      .select("id,name,url")
+      .order("created_at", { ascending: false });
+    setSites(data || []);
+    if ((data || []).length > 0) setSelectedSiteId(data![0].id);
+  }
+
     async function handleConnect(service: 'analytics' | 'searchConsole' | 'ads') {
         setConnecting(service);
+    setError("");
 
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) {
@@ -45,8 +61,14 @@ export default function IntegrationsPage() {
             return;
         }
 
+    if (!selectedSiteId) {
+      setConnecting(null);
+      setError("Select a site before connecting.");
+      return;
+    }
+
         // Redirect to OAuth flow
-        window.location.href = `/api/integrations/google/${service}/connect?userId=${user.id}`;
+    window.location.href = `/api/integrations/google/${service}/connect?userId=${user.id}&siteId=${selectedSiteId}`;
     }
 
     async function handleDisconnect(service: string) {
@@ -116,6 +138,31 @@ export default function IntegrationsPage() {
             </div>
 
             <div className="grid gap-4 md:gap-6 grid-cols-1">
+        <Card className="bg-zinc-900/40 border-zinc-800/60">
+          <CardHeader>
+            <CardTitle className="text-lg md:text-xl">Select Site</CardTitle>
+            <CardDescription>Choose which site/project to connect to Google services.</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {error && <div className="text-sm text-red-400">{error}</div>}
+            {sites.length === 0 ? (
+              <div className="text-sm text-zinc-400">Add a site first from the dashboard before connecting services.</div>
+            ) : (
+              <select
+                className="w-full rounded border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm text-white"
+                value={selectedSiteId}
+                onChange={(e) => setSelectedSiteId(e.target.value)}
+              >
+                {sites.map((s) => (
+                  <option key={s.id} value={s.id}>
+                    {s.name || new URL(s.url).hostname} — {s.url}
+                  </option>
+                ))}
+              </select>
+            )}
+          </CardContent>
+        </Card>
+
                 {services.map((service) => {
                     const connected = isConnected(service.id);
                     const Icon = service.icon;
