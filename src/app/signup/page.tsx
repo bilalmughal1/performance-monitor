@@ -7,7 +7,7 @@ import { supabase } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Zap, Github, ArrowRight } from "lucide-react";
+import { Zap, ArrowRight } from "lucide-react";
 
 const signupSchema = z.object({
   email: z.string().email("Enter a valid email address"),
@@ -102,101 +102,91 @@ export default function SignupPage() {
               </div>
             )}
 
-            <div className="grid gap-4 md:grid-cols-2">
+            <form className="space-y-4" onSubmit={(e) => { e.preventDefault(); handleSignup(); }}>
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-zinc-300">Full Name *</label>
+                  <input
+                    name="fullName"
+                    className="flex h-10 w-full rounded-md border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all text-white"
+                    placeholder="John Doe"
+                    value={formData.fullName}
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-zinc-300">Company Name</label>
+                  <input
+                    name="companyName"
+                    className="flex h-10 w-full rounded-md border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all text-white"
+                    placeholder="Acme Inc."
+                    value={formData.companyName}
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
+
               <div className="space-y-2">
-                <label className="text-sm font-medium text-zinc-300">Full Name *</label>
+                <label className="text-sm font-medium text-zinc-300">Mobile Number</label>
                 <input
-                  name="fullName"
+                  name="mobileNumber"
                   className="flex h-10 w-full rounded-md border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all text-white"
-                  placeholder="John Doe"
-                  value={formData.fullName}
+                  placeholder="+1 (555) 000-0000"
+                  value={formData.mobileNumber}
                   onChange={handleChange}
                 />
               </div>
+
               <div className="space-y-2">
-                <label className="text-sm font-medium text-zinc-300">Company Name</label>
+                <label className="text-sm font-medium text-zinc-300">Email *</label>
                 <input
-                  name="companyName"
+                  name="email"
                   className="flex h-10 w-full rounded-md border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all text-white"
-                  placeholder="Acme Inc."
-                  value={formData.companyName}
+                  placeholder="m@example.com"
+                  value={formData.email}
+                  onChange={handleChange}
+                  type="email"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <label className="text-sm font-medium text-zinc-300">Password *</label>
+                  <button
+                    type="button"
+                    className="text-xs text-indigo-400 hover:text-indigo-300"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? "Hide" : "Show"}
+                  </button>
+                </div>
+                <input
+                  name="password"
+                  className="flex h-10 w-full rounded-md border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all text-white"
+                  type={showPassword ? "text" : "password"}
+                  value={formData.password}
+                  onChange={handleChange}
+                />
+                <p className="text-xs text-zinc-500">Min 6 characters</p>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-zinc-300">Bio</label>
+                <textarea
+                  name="bio"
+                  className="flex min-h-[80px] w-full rounded-md border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all text-white resize-none"
+                  placeholder="Tell us about yourself..."
+                  value={formData.bio}
+                  // @ts-ignore
                   onChange={handleChange}
                 />
               </div>
-            </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-zinc-300">Mobile Number</label>
-              <input
-                name="mobileNumber"
-                className="flex h-10 w-full rounded-md border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all text-white"
-                placeholder="+1 (555) 000-0000"
-                value={formData.mobileNumber}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-zinc-300">Email *</label>
-              <input
-                name="email"
-                className="flex h-10 w-full rounded-md border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all text-white"
-                placeholder="m@example.com"
-                value={formData.email}
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <label className="text-sm font-medium text-zinc-300">Password *</label>
-                <button
-                  type="button"
-                  className="text-xs text-indigo-400 hover:text-indigo-300"
-                  onClick={() => setShowPassword(!showPassword)}
-                >
-                  {showPassword ? "Hide" : "Show"}
-                </button>
-              </div>
-              <input
-                name="password"
-                className="flex h-10 w-full rounded-md border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all text-white"
-                type={showPassword ? "text" : "password"}
-                value={formData.password}
-                onChange={handleChange}
-              />
-              <p className="text-xs text-zinc-500">Min 6 characters</p>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-zinc-300">Bio</label>
-              <textarea
-                name="bio"
-                className="flex min-h-[80px] w-full rounded-md border border-zinc-800 bg-zinc-950 px-3 py-2 text-sm placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 transition-all text-white resize-none"
-                placeholder="Tell us about yourself..."
-                value={formData.bio}
-                // @ts-ignore
-                onChange={handleChange}
-              />
-            </div>
-
-            <Button className="w-full" variant="premium" onClick={handleSignup} disabled={loading}>
-              {loading ? "Creating account..." : "Create Account"}
-              {!loading && <ArrowRight className="ml-2 h-4 w-4" />}
-            </Button>
-
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t border-zinc-800" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-zinc-950 px-2 text-zinc-500">Or continue with</span>
-              </div>
-            </div>
-
-            <Button variant="outline" className="w-full" onClick={() => { /* TODO: Github Auth */ }}>
-              <Github className="mr-2 h-4 w-4" /> Github
-            </Button>
+              <Button type="submit" className="w-full" variant="premium" disabled={loading}>
+                {loading ? "Creating account..." : "Create Account"}
+                {!loading && <ArrowRight className="ml-2 h-4 w-4" />}
+              </Button>
+            </form>
           </CardContent>
         </Card>
 
