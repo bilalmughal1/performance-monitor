@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import {
     LayoutDashboard,
@@ -15,10 +15,12 @@ import {
     X
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { supabase } from "@/lib/supabase/client";
 
 const navItems = [
     { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
     { label: "Sites & Reports", href: "/dashboard", icon: LineChart },
+    { label: "Profile", href: "/dashboard/profile", icon: Settings },
     { label: "Integrations", href: "/dashboard/integrations", icon: Plug },
     { label: "Subscription", href: "/pricing", icon: CreditCard },
     { label: "Settings", href: "/dashboard/settings", icon: Settings },
@@ -26,7 +28,13 @@ const navItems = [
 
 export function AppSidebar() {
     const pathname = usePathname();
+    const router = useRouter();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+    const handleSignOut = async () => {
+        await supabase.auth.signOut();
+        router.push("/login");
+    };
 
     const NavContent = () => (
         <>
@@ -62,7 +70,10 @@ export function AppSidebar() {
             </div>
 
             <div className="border-t border-zinc-800 p-4">
-                <button className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-zinc-400 hover:bg-zinc-800/50 hover:text-white transition-colors">
+                <button
+                    onClick={handleSignOut}
+                    className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-zinc-400 hover:bg-zinc-800/50 hover:text-white transition-colors"
+                >
                     <LogOut className="h-4 w-4" />
                     Sign Out
                 </button>
