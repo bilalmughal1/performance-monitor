@@ -12,7 +12,7 @@ export default function Home() {
         <div className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] rounded-full bg-purple-500/10 blur-[128px]" />
       </div>
 
-      <header className="relative z-10 mx-auto flex max-w-7xl items-center justify-between px-4 md:px-6 py-4 md:py-6 ring-1 ring-zinc-800/50 backdrop-blur-md sticky top-0 bg-black/50">
+      <header className="relative z-10 mx-auto flex flex-wrap max-w-7xl items-center justify-between gap-3 px-4 md:px-6 py-4 md:py-6 ring-1 ring-zinc-800/50 backdrop-blur-md sticky top-0 bg-black/50">
         <div className="flex items-center gap-2 text-lg md:text-xl font-bold tracking-tight">
           <Zap className="h-5 w-5 md:h-6 md:w-6 text-indigo-500" fill="currentColor" />
           <span>PerfMonitor</span>
@@ -31,7 +31,7 @@ export default function Home() {
 
       <main className="relative z-10 text-center">
         {/* Hero Section */}
-        <section className="mx-auto max-w-4xl px-4 md:px-6 pt-16 md:pt-32 pb-12 md:pb-20">
+        <section className="mx-auto max-w-4xl px-4 md:px-6 pt-16 md:pt-32 pb-12 md:pb-20 text-left md:text-center">
           <div className="inline-flex items-center rounded-full border border-indigo-500/30 bg-indigo-500/10 px-3 py-1 text-xs font-medium text-indigo-300 mb-6 md:mb-8 backdrop-blur-sm">
             <span className="flex h-2 w-2 rounded-full bg-indigo-500 mr-2 animate-pulse"></span>
             Now available in Beta
