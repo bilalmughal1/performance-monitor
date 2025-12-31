@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase/client";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Button } from "@/components/common/button";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/common/card";
 import { useRouter } from "next/navigation";
 
 export default function ProfilePage() {
