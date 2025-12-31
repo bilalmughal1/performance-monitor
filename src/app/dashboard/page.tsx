@@ -5,8 +5,8 @@ import Link from "next/link";
 import { supabase } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { BusinessImpactCard } from "./business-impact";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/common/card";
+import { Button } from "@/components/common/button";
 import { Plus, LayoutGrid, List as ListIcon, Smartphone, Monitor } from "lucide-react";
 import { cn } from "@/lib/utils";
 
