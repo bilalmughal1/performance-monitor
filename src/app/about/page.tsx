@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Button } from "@/components/common/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/common/card";
-import { Zap, BarChart3, Target, Users, ArrowRight, CheckCircle2 } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/common/card";
+import { Zap, BarChart3, Target, ArrowRight, CheckCircle2 } from "lucide-react";
 
 export default function AboutPage() {
     return (
@@ -71,7 +71,7 @@ export default function AboutPage() {
                             </CardHeader>
                             <CardContent>
                                 <p className="text-zinc-400">
-                                    Track your website's performance metrics continuously with automated audits and instant alerts when issues arise.
+                                    Track your website&apos;s performance metrics continuously with automated audits and instant alerts when issues arise.
                                 </p>
                             </CardContent>
                         </Card>
@@ -148,9 +148,9 @@ export default function AboutPage() {
 
                 {/* Future Vision */}
                 <section className="space-y-4 md:space-y-6 bg-gradient-to-br from-indigo-950/20 to-purple-950/20 border border-indigo-500/20 rounded-2xl p-4 md:p-8">
-                    <h2 className="text-2xl md:text-3xl font-bold">What's Next?</h2>
+                    <h2 className="text-2xl md:text-3xl font-bold">What&apos;s Next?</h2>
                     <p className="text-base md:text-lg text-zinc-300 leading-relaxed">
-                        We're constantly evolving to meet the needs of modern web developers and businesses. Upcoming features include:
+                        We&apos;re constantly evolving to meet the needs of modern web developers and businesses. Upcoming features include:
                     </p>
                     <ul className="space-y-3 text-zinc-300">
                         <li className="flex items-start gap-3">

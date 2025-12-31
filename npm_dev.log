@@ -1,0 +1,15 @@
+
+> performance-monitor@0.1.0 dev
+> next dev
+
+   ▲ Next.js 16.0.10 (Turbopack)
+   - Local:         http://localhost:3000
+   - Network:       http://192.168.0.2:3000
+
+ ✓ Starting...
+ ⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+ ✓ Ready in 1508ms
+ ○ Compiling /contact ...
+ GET /contact 200 in 3.9s (compile: 3.6s, proxy.ts: 99ms, render: 191ms)
+ GET /contact 200 in 80ms (compile: 7ms, proxy.ts: 11ms, render: 62ms)
+[?25h

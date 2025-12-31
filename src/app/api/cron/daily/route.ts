@@ -78,9 +78,10 @@ export async function GET(req: Request) {
             });
 
             results.push({ site: site.url, status: "ok", performance });
-        } catch (e: any) {
+        } catch (e: unknown) {
             console.error(`Failed run for ${site.url}`, e);
-            results.push({ site: site.url, status: "error", msg: e.message });
+            const errorMessage = e instanceof Error ? e.message : "An unknown error occurred";
+            results.push({ site: site.url, status: "error", msg: errorMessage });
         }
     }
 

@@ -77,10 +77,11 @@ export async function GET(req: Request) {
         return NextResponse.redirect(
             `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/sites/${siteId}?success=${service}`
         );
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("OAuth callback error:", error);
+        const errorMessage = error instanceof Error ? error.message : "An unknown error occurred";
         return NextResponse.redirect(
-            `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard?error=${encodeURIComponent(error.message)}`
+            `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard?error=${encodeURIComponent(errorMessage)}`
         );
     }
 }

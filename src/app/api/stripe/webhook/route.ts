@@ -1,5 +1,6 @@
 
 import { stripe } from "@/lib/stripe";
+import Stripe from "stripe";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
@@ -25,11 +26,12 @@ export async function POST(req: Request) {
             signature,
             process.env.STRIPE_WEBHOOK_SECRET!
         );
-    } catch (error: any) {
-        return new NextResponse(`Webhook Error: ${error.message}`, { status: 400 });
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : "Unknown error";
+        return new NextResponse(`Webhook Error: ${message}`, { status: 400 });
     }
 
-    const session = event.data.object as any;
+    const session = event.data.object as Stripe.Checkout.Session;
 
     if (event.type === "checkout.session.completed") {
         const subscription = await stripe.subscriptions.retrieve(session.subscription as string);
