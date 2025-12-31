@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/lib/supabase/client";
 
 type CompetitorRow = {
@@ -18,23 +18,20 @@ export function CompetitorsSection({
 }) {
     const [competitors, setCompetitors] = useState<CompetitorRow[]>([]);
     const [newUrl, setNewUrl] = useState("");
-    const [loading, setLoading] = useState(false);
     const [adding, setAdding] = useState(false);
     const [error, setError] = useState("");
 
-    useEffect(() => {
-        loadCompetitors();
-    }, [siteId]);
-
-    async function loadCompetitors() {
-        setLoading(true);
+    const loadCompetitors = useCallback(async () => {
         const { data } = await supabase
             .from("competitors")
             .select("*")
             .eq("site_id", siteId);
-        setCompetitors((data as any) ?? []);
-        setLoading(false);
-    }
+        setCompetitors(data ?? []);
+    }, [siteId]);
+
+    useEffect(() => {
+        loadCompetitors();
+    }, [loadCompetitors]);
 
     async function handleAdd() {
         if (!newUrl.trim()) return;
@@ -58,8 +55,10 @@ export function CompetitorsSection({
 
             setNewUrl("");
             loadCompetitors();
-        } catch (e: any) {
-            setError(e.message || "Invalid URL");
+        } catch (e) {
+            if (e instanceof Error) {
+                setError(e.message || "Invalid URL");
+            }
         } finally {
             setAdding(false);
         }

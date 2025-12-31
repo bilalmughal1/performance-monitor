@@ -7,22 +7,13 @@ import { Button } from "@/components/common/button";
 const themes = ["system", "dark", "light"] as const;
 
 export default function AppSettingsPage() {
-  const [theme, setTheme] = useState<"system" | "dark" | "light">("system");
-
-  // Load saved theme on mount
-  useEffect(() => {
-    if (typeof window === "undefined") return;
+  const [theme, setTheme] = useState<"system" | "dark" | "light">(() => {
+    if (typeof window === "undefined") return "system";
     const stored = localStorage.getItem("theme") as "system" | "dark" | "light" | null;
-    if (stored) {
-      applyTheme(stored, false);
-      setTheme(stored);
-    } else {
-      applyTheme("system", false);
-    }
-  }, []);
+    return stored || "system";
+  });
 
   const applyTheme = (value: typeof theme, persist = true) => {
-    setTheme(value);
     if (typeof window !== "undefined") {
       const root = document.documentElement;
       root.classList.remove("theme-light", "theme-dark");
@@ -31,6 +22,10 @@ export default function AppSettingsPage() {
       if (persist) localStorage.setItem("theme", value);
     }
   };
+
+  useEffect(() => {
+    applyTheme(theme, false);
+  }, [theme]);
 
   return (
     <div className="px-4 md:px-6 lg:px-8 py-6 space-y-8 max-w-4xl mx-auto">
@@ -51,7 +46,7 @@ export default function AppSettingsPage() {
                 key={t}
                 type="button"
                 variant={theme === t ? "premium" : "outline"}
-                onClick={() => applyTheme(t)}
+                onClick={() => setTheme(t)}
               >
                 {t === "system" ? "System" : t.charAt(0).toUpperCase() + t.slice(1)}
               </Button>
@@ -69,7 +64,7 @@ export default function AppSettingsPage() {
           <CardDescription className="text-sm">Manage email or in-app alerts (coming soon).</CardDescription>
         </CardHeader>
         <CardContent className="space-y-2 text-sm text-zinc-400">
-          <p>We’ll add granular notification controls here.</p>
+          <p>We&apos;ll add granular notification controls here.</p>
         </CardContent>
       </Card>
     </div>
