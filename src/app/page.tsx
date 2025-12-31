@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { Button } from "@/components/common/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/common/card";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Zap, BarChart3, Globe, Lock, ArrowRight, LayoutDashboard, History, Smartphone } from "lucide-react";
 
 export default function Home() {

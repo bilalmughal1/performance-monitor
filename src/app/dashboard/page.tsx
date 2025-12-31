@@ -1,13 +1,12 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import Link from "next/link";
 import { supabase } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
-import { BusinessImpactCard } from "./business-impact";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/common/card";
 import { Button } from "@/components/common/button";
-import { Plus, LayoutGrid, List as ListIcon, Smartphone, Monitor } from "lucide-react";
+import { Plus, LayoutGrid, List as ListIcon, Smartphone } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type SiteRow = {
@@ -49,11 +48,6 @@ function normalizeUrl(input: string) {
   }
 }
 
-function fmtNum(v: number | null, digits = 0) {
-  if (v === null || typeof v !== "number" || Number.isNaN(v)) return "--";
-  return v.toFixed(digits);
-}
-
 function getHealthScore(latest: RunRow | null) {
   if (!latest?.performance) return 0;
   return latest.performance;
@@ -86,20 +80,7 @@ export default function DashboardPage() {
   const [newName, setNewName] = useState("");
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    (async () => {
-      const { data } = await supabase.auth.getUser();
-      if (!data.user) {
-        router.push("/login");
-        return;
-      }
-      setUserId(data.user.id);
-      setEmail(data.user.email ?? "");
-      loadData(data.user.id);
-    })();
-  }, [router]);
-
-  async function loadData(uid: string) {
+  const loadData = useCallback(async () => {
     setLoading(true);
     const { data: sitesData } = await supabase
       .from("sites")
@@ -122,14 +103,27 @@ export default function DashboardPage() {
         .order("created_at", { ascending: false });
 
       const grouped: Record<string, RunRow[]> = {};
-      runs?.forEach((r: any) => {
+      runs?.forEach((r) => {
         if (!grouped[r.site_id]) grouped[r.site_id] = [];
         grouped[r.site_id].push(r);
       });
       setRunsBySite(grouped);
     }
     setLoading(false);
-  }
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      const { data } = await supabase.auth.getUser();
+      if (!data.user) {
+        router.push("/login");
+        return;
+      }
+      setUserId(data.user.id);
+      setEmail(data.user.email ?? "");
+      loadData();
+    })();
+  }, [router, loadData]);
 
   async function handleAddSite() {
     if (!newUrl) return;
@@ -153,7 +147,7 @@ export default function DashboardPage() {
     } else {
       setNewUrl("");
       setNewName("");
-      loadData(userId);
+      loadData();
     }
     setAdding(false);
   }
@@ -308,4 +302,3 @@ export default function DashboardPage() {
     </div >
   );
 }
-

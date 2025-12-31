@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Add custom ignores
+    "postcss.config.mjs",
   ]),
 ]);
 

@@ -1,7 +1,37 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
-type PsiResponse = any;
+type PsiResponse = {
+  lighthouseResult?: {
+    categories?: {
+      [key: string]: {
+        score: number;
+      };
+    };
+    audits?: {
+      [key: string]: {
+        numericValue: number;
+      };
+    };
+    finalUrl?: string;
+    lighthouseVersion?: string;
+  };
+  loadingExperience?: {
+    metrics?: {
+      INTERACTION_TO_NEXT_PAINT?: {
+        percentile: number;
+      };
+    };
+  };
+  originLoadingExperience?: {
+    metrics?: {
+      INTERACTION_TO_NEXT_PAINT?: {
+        percentile: number;
+      };
+    };
+  };
+  id?: string;
+};
 
 function normalizeUrl(input: string) {
   const raw = input.trim();
@@ -26,12 +56,12 @@ function getCategoryScore(psi: PsiResponse, key: string) {
   return Math.round(v * 100);
 }
 
-function getLabMs(psi: any, auditId: string) {
+function getLabMs(psi: PsiResponse, auditId: string) {
   const v = psi?.lighthouseResult?.audits?.[auditId]?.numericValue;
   return typeof v === "number" ? v : null;
 }
 
-function getFieldInpP75Ms(psi: any) {
+function getFieldInpP75Ms(psi: PsiResponse) {
   const v =
     psi?.loadingExperience?.metrics?.INTERACTION_TO_NEXT_PAINT?.percentile ??
     psi?.originLoadingExperience?.metrics?.INTERACTION_TO_NEXT_PAINT
@@ -76,7 +106,13 @@ export async function POST(req: Request) {
     );
   }
 
-  let body: any = {};
+  interface RequestBody {
+    siteId?: string;
+    url?: string;
+    strategy?: string;
+  }
+
+  let body: RequestBody = {};
   try {
     body = await req.json();
   } catch {
@@ -144,7 +180,7 @@ export async function POST(req: Request) {
     );
   }
 
-  if ((recentRuns as any)?.length >= 30) {
+  if (recentRuns?.length >= 30) {
     return NextResponse.json(
       { error: "Rate limit exceeded, try again in a bit" },
       { status: 429 }
@@ -164,9 +200,9 @@ export async function POST(req: Request) {
   let resp: Response;
   try {
     resp = await fetch(psiUrl, { method: "GET", signal: controller.signal });
-  } catch (err: any) {
+  } catch (err) {
     clearTimeout(timeout);
-    if (err?.name === "AbortError") {
+    if (err instanceof Error && err.name === "AbortError") {
       return NextResponse.json(
         { error: "PageSpeed API timeout" },
         { status: 504 }

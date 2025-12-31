@@ -17,8 +17,8 @@ import {
   AreaChart,
   Area,
 } from "recharts";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/common/card";
-import { Button } from "@/components/common/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { ArrowLeft, Download, Calendar, Smartphone, Monitor } from "lucide-react";
 import { cn } from "@/lib/utils";
 

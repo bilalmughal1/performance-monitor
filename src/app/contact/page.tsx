@@ -25,9 +25,9 @@ export default function ContactPage() {
       <div className="max-w-3xl mx-auto space-y-6">
         <div className="space-y-2">
           <p className="text-xs uppercase tracking-widest text-zinc-500">Contact</p>
-          <h1 className="text-3xl md:text-4xl font-semibold">We’d love to hear from you</h1>
+          <h1 className="text-3xl md:text-4xl font-semibold">We&apos;d love to hear from you</h1>
           <p className="text-zinc-400 text-sm md:text-base">
-            Questions, feedback, or partnership ideas—send us a note and we’ll get back to you.
+            Questions, feedback, or partnership ideas—send us a note and we&apos;ll get back to you.
           </p>
         </div>
 
@@ -72,7 +72,7 @@ export default function ContactPage() {
                 <div className="text-sm text-red-400">Please fill out all fields.</div>
               )}
               {status === "sent" && (
-                <div className="text-sm text-emerald-400">Message sent! We’ll reply soon.</div>
+                <div className="text-sm text-emerald-400">Message sent! We'll reply soon.</div>
               )}
 
               <Button type="submit" className="w-full md:w-auto" variant="premium">
